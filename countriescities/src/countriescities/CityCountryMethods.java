@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class CityCountryMethods {
@@ -14,48 +12,74 @@ public class CityCountryMethods {
 
     public CityCountryMethods(List<Country> countries, List<City> cities) {
         this.countries = countries;
-        this.cities = cities;
-    }
+        this.cities = cities; }
 
     public List<Country> getCountries() {
-        return countries;
-    }
+        return countries; }
 
     public void setCountries(List<Country> countries) {
-        this.countries = countries;
-    }
+        this.countries = countries; }
 
     public List<City> getCities() {
-        return cities;
-    }
+        return cities; }
 
     public void setCities(List<City> cities) {
-        this.cities = cities;
-    }
-
+        this.cities = cities; }
     //
-    public List<Integer> populations() {
-        return this.countries.stream().map(Country::getPopulation).collect(Collectors.toList());
-    }
+    public HashMap<String,List<String>> countryCities(){
+        HashMap<String,List<String>> countryCities=new HashMap<>();
+        for(Country country:countries){
+            countryCities.put(country.getName(),cities.stream()
+                    								.filter(city -> city.getCountryCode().equals(" "+country.getCode()))
+                    								.map(City::getName)
+                    								.collect(Collectors.toList()));
+        	}
+        return countryCities; 
+        }
+
+    public HashMap<String,Integer> populations() {
+    	HashMap<String,Integer> countriesPopulation = new HashMap<>();
+        this.countries.stream()
+        			.forEach(x -> countriesPopulation.put(x.getName(),x.getPopulation()));
+        return countriesPopulation;
+        }
+
 
     public Double averageOfPopulations() {
-        return countries.stream().mapToDouble(Country::getPopulation).average().getAsDouble();
-    }
+        return countries.stream()
+        		.distinct()
+        		.mapToDouble(Country::getPopulation)
+        		.average().getAsDouble(); 
+        }
+
 
     public Integer maximumPopulation() {
-        return countries.stream().mapToInt(Country::getPopulation).max().getAsInt();
-    }
+        return countries.stream()
+        		.mapToInt(Country::getPopulation)
+        		.max().getAsInt(); 
+        }
     
-    
-    public List<String> HighestCityPopPerCountry(String s,int order) {
+
+    public List<City> sortedCitiesByCountryCode(String s) {
         return cities.stream()
-        		.filter(city -> city.getCountryCode().equals(" " + s))
-        		.sorted(Comparator.comparing(City::getPopulation).reversed())
-        		.limit(order)
-        		.map(City::getName)
-        		.collect(Collectors.toList());
+        		.filter(city -> city.getCountryCode().equals(" " +s))
+        		.sorted(Comparator.comparing(City::getPopulation))
+        		.collect(Collectors.toList()); 
+        }
+
+    public HashMap<String,List<String>> HighestCityPopPerCountry() {
+        HashMap<String,List<String>> countryHighestCities=new HashMap<>();
+        for(Country c:countries){
+            countryHighestCities.put(c.getName(),cities.stream()
+                            						  .filter(city -> city.getCountryCode().equals(" " + c.getCode()))
+                            						  .sorted(Comparator.comparing(City::getPopulation).reversed())
+                            						  .limit(1)
+                            						  .map(City::getName)
+                            						  .collect(Collectors.toList()));
+            }
+        return countryHighestCities;
     }
-    
+
     public List<String> HighestCapitalPop() {
     	List<City> capitals = new ArrayList<>(); 
     	
@@ -74,22 +98,4 @@ public class CityCountryMethods {
         		.map(City::getName)
         		.collect(Collectors.toList());
     }
-    
-    public Map<String, List<String>> countryCity(){
-    	Map<String, List<String>> countryCities = new HashMap<>();
-        
-        List<String> countriesCodes = countries.stream()
-        		.map(Country::getCode)
-        		.distinct().collect(Collectors.toList());
-                
-        for(String code: countriesCodes) {
-        	List<String> citiesNames = cities.stream()
-        			.filter(city -> city.getCountryCode().equals(" "+code))
-        			.map(City::getName)
-        			.collect(Collectors.toList());
-        	countryCities.put(code, citiesNames);
-        }
-    	return countryCities;
-    }
-    
 }

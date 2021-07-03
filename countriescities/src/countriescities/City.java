@@ -35,4 +35,9 @@ public class City {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode; }
+    
+    @Override
+    public String toString() {
+    	return String.format(name);
+    }
 }
