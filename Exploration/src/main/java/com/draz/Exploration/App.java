@@ -4,11 +4,7 @@ import java.awt.List;
 import java.io.IOException;
 
 import joinery.DataFrame;
- 
-/**
- * Hello world!
- *
- */
+
 public class App 
 {
     public static void main( String[] args ) throws IOException
@@ -31,10 +27,14 @@ public class App
     	//System.out.println(x);
     	EDA titanicEDA = new EDA("/home/draz/Downloads/java/Day5/Data_to_use/titanic.csv");
     	
-    	//titanicEDA.getPassenger();
+    	titanicEDA.getPassenger();
     	titanicEDA.graphPassengerClass();
         titanicEDA.graphPassengersurvived();
         titanicEDA.graphPassengersurvivedGender();
         titanicEDA.graphPassengerAges();
+    	System.out.println(titanicEDA.survivalSummary());
+    	System.out.println(titanicEDA.genderSummary());
+    	System.out.println(titanicEDA.ageSummary());
+        System.out.println(titanicEDA.fareSummary());
     }
 }

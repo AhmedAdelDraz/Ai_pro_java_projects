@@ -18,6 +18,7 @@ import org.knowm.xchart.style.Styler.LegendPosition;
 public class EDA {
 	String filePath;
 	List<Passenger> passengers = new ArrayList<Passenger>(); 
+	
 	public EDA(String filePath) throws IOException{
 		this.filePath = filePath;
         DataFrame <Object> df =  DataFrame.readCsv("/home/draz/Downloads/java/Day5/Data_to_use/titanic.csv");
@@ -43,9 +44,59 @@ public class EDA {
 	
 	public void getPassenger() {
 		 this.passengers.stream()
-		 .filter(x->x.getSurvived().equals("1"))
-		 .forEach(x->System.out.println(x.getSurvived()));
+		 .map(x->x.getAge())
+		 .forEach(x-> System.out.println(x));
 	}
+	public Map<String, Long> survivalSummary(){
+		return passengers.stream()
+				.collect(Collectors.groupingBy(Passenger::getSurvived, Collectors.counting()));
+	}
+	
+	public Map<String, Long> genderSummary(){
+		return passengers.stream()
+				.collect(Collectors.groupingBy(Passenger::getSex, Collectors.counting()));
+	}
+	
+	
+	public List<Double> ageSummary(){
+		List<Double> summaries = new ArrayList<>();
+		Double mean = passengers.stream()
+				.map(Passenger::getAge).filter(x -> x!=null).mapToDouble(x -> x).average().getAsDouble();
+
+		Double  variance = passengers.stream()
+				.map(Passenger::getAge)
+				.filter(x -> x!=null)
+                .map(x -> x - mean)
+                .map(x -> x*x)
+                .mapToDouble(x -> x).average().getAsDouble();
+		Double standardDeviation = Math.sqrt(variance);
+		
+		summaries.add(mean);
+		summaries.add(variance);
+		summaries.add(standardDeviation);
+
+		return summaries;
+	}
+	
+	public List<Double> fareSummary(){
+		List<Double> summaries = new ArrayList<>();
+		Double mean = passengers.stream()
+				.map(Passenger::getFare).filter(x -> x!=null).mapToDouble(x -> x).average().getAsDouble();
+		Double  variance = passengers.stream()
+				.map(Passenger::getFare)
+				.filter(x -> x!=null)
+                .map(x -> x - mean)
+                .map(x -> x*x)
+                .mapToDouble(x -> x).average().getAsDouble();
+		Double standardDeviation = Math.sqrt(variance);
+		
+		summaries.add(mean);
+		summaries.add(variance);
+		summaries.add(standardDeviation);
+
+		return summaries;
+	}	
+
 	
 	public void graphPassengerAges() {
 		//filter to get an array of passenger ages
