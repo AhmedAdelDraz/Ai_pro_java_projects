@@ -27,7 +27,7 @@ public class App
     	//System.out.println(x);
     	EDA titanicEDA = new EDA("/home/draz/Downloads/java/Day5/Data_to_use/titanic.csv");
     	
-    	titanicEDA.getPassenger();
+    	//titanicEDA.getPassenger();
     	titanicEDA.graphPassengerClass();
         titanicEDA.graphPassengersurvived();
         titanicEDA.graphPassengersurvivedGender();
